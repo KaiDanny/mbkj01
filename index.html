@@ -1,113 +1,77 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>深圳市麦帮科技有限公司</title>
-<meta name="keywords" content="深圳市麦帮科技有限公司">
-<meta name="description" content="深圳市麦帮科技有限公司">
-<link href="css/style.css"  rel="stylesheet" />
-<link href="css/index.css"  rel="stylesheet" />
+  <meta charset="utf-8">
 
-<script src="js/jquery-1.8.3.min.js" type="text/javascript"></script>
-<script src="js/jquery.SuperSlide.2.1.1.js" type="text/javascript"></script>
-<!--ie9以下调用-->
-<!--[if lt IE 9]>
-<script src="style/js/html5.js" type="text/javascript"></script>
-<script src="style/js/PIE.js"  type="text/javascript"></script>
-<![endif]-->
+  <title>Cocos Creator | solitaire</title>
+
+  <!--http://www.html5rocks.com/en/mobile/mobifying/-->
+  <meta name="viewport"
+        content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"/>
+
+  <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- force webkit on 360 -->
+  <meta name="renderer" content="webkit"/>
+  <meta name="force-rendering" content="webkit"/>
+  <!-- force edge on IE -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- force full screen on some browser -->
+  <meta name="full-screen" content="yes"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="360-fullscreen" content="true"/>
+  
+  <!-- force screen orientation on some browser -->
+  <meta name="screen-orientation" content=""/>
+  <meta name="x5-orientation" content="">
+
+  <!--fix fireball/issues/3568 -->
+  <!--<meta name="browsermode" content="application">-->
+  <meta name="x5-page-mode" content="app">
+
+  <!--<link rel="apple-touch-icon" href=".png" />-->
+  <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+
+  <link rel="stylesheet" type="text/css" href="style-mobile.css"/>
 
 </head>
 <body>
-<!--头部-->
-<header>
-	<div class="beijing">
-		<h2><a href="index.html" ><em><img class="abc" src="img/249_src.png" ></em></a></h2>
-		<ul>
-			<li>
-				<a class="menu_1 hover"  href="index.html" >首页</a>
-			</li>
-			<li>
-				<a class="menu_1 " href="guan.html" >关于我们<em></em></a>
-				<div class="menu ">
-					<div class="menu_right">
-						<!--dl循环-->
-                        <dl>
-							<dt><a href="guan.html" ><img src="img/284_src.jpg" ></a></dt>
-							<dd>
-								<div class="menu_right1" style="text-indent:2em;">深圳市麦帮科技有限公司坐落在风景秀丽、气候温润的深圳龙岗，交通通讯便利。我公司做为一家具有游戏机、蓝牙音箱、智能手环、音响、小家用电器、蓝牙耳机、电子产品的生产资质的厂家，所设计生产的产品在国内外销售。
-									我公司坚持以“质量求生存，信誉求发展”作为宗旨来满足广大客户朋友的需求，材料与技术相结合，产品不仅外观美丽大方而且价格低廉，经久耐用，深得客户的推崇。</div>
-								<div class="menu_right2"><a href="guan.html" >查看详细</a></div>
-							</dd>
-						</dl>
-                    </div>
-                </div>	
-			</li>
-			<li>
-				<a class="menu_1 " >产品展示<em></em></a>
-				<div class="menu ">
-					<div class="menu_right">
-						<!--dl循环-->
-                        <dl>
-							<dt><img src="img/810_src.jpg" ></a></dt>
-							<dt><img src="img/810_2src.jpg" ></a></dt>
-							<dt><img src="img/810_1src.jpg" ></a></dt>
-						</dl>
-                    </div>
-                </div>
-			</li>								
-			<li>
-				<a class="menu_1 " >联系我们<em></em></a>
-				<div class="menu ">
-					<div class="menu_right">
-						<!--dl循环-->
-                        <dl>
-							<dt><a href="lian.html" ><img src="img/810_s.jpg" ></a></dt>
-							<dd>
-								<div class="menu_right1">
-									<p>	地址：深圳市龙岗区龙岗街道平南社区龙岗路11号庆丰大厦211 </p>
-									<p> 电话：17328775979 </p>
-								</div>
-							</dd>
-						</dl>
-                    </div>
-                </div>
-			</li>
-																																																																																																																																																																					
-		</ul>
-		<div class="clear"></div>		
-	</div>
-	<div class="clear"></div>
-</header>
-<div class="banner">
-    <div class="bd">
-        <ul>
-            <li><a href="#" style="background:url(./img/1059_src.jpg) no-repeat center 0;background-size:100% 100%;"></a></li>
-            <li><a href="#" style="background:url(./img/2017_src.png) no-repeat center 0;background-size:100% 100%;"></a></li>
-            <li><a href="#" style="background:url(./img/408_src.jpg) no-repeat center 0;background-size:100% 100%;"></a></li>              
-        </ul>
-    </div>
-    <div class="hd">
-        <ul>
-            <li class="rounded"></li>
-            <li class="rounded"></li>
-            <li class="rounded"></li>
+  <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
+  <div id="splash">
 
-        </ul>
-    </div>
-	
-</div>
-<footer class="ppp">
-	<p style="font-size:13px;font-weight:bold"> Copyright 2018 深圳市麦帮科技有限公司 http://www.szsmbkj.cn 版权所有 </p>
-	<p style="font-size:13px;font-weight:bold"> Address：深圳市麦帮科技有限公司 Tel：17328775979 
-</footer>
+  </div>
 
-</body>
-</html>
+<script src="src/settings.js" charset="utf-8"></script>
+
+<script src="main.js" charset="utf-8"></script>
 
 <script type="text/javascript">
-jQuery(".banner").slide({ mainCell:".bd ul",effect:"fold",autoPlay:true,interTime:5000 });
-jQuery(".index_2").slide({ mainCell:"ul.bd.htm",effect:"topLoop",autoPlay:true,interTime:5000 });
+(function () {
+    // open web debugger console
+    if (typeof VConsole !== 'undefined') {
+        window.vConsole = new VConsole();
+    }
+
+    var splash = document.getElementById('splash');
+    splash.style.display = 'block';
+
+    var cocos2d = document.createElement('script');
+    cocos2d.async = true;
+    cocos2d.src = window._CCSettings.debug ? 'cocos2d-js.js' : 'cocos2d-js-min.js';
+
+    var engineLoaded = function () {
+        document.body.removeChild(cocos2d);
+        cocos2d.removeEventListener('load', engineLoaded, false);
+        window.boot();
+    };
+    cocos2d.addEventListener('load', engineLoaded, false);
+    document.body.appendChild(cocos2d);
+})();
 </script>
-<script type="text/javascript" src="js/xmsz_common.js" ></script>
-<!--[if IE 6]><script type="text/javascript" src="js/pngfix.js" ></script><![endif]-->
+</body>
+</html>
