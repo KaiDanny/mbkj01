@@ -12,16 +12,8 @@ System.register([], function (_export, _context) {
       return topLevelImport('wait-for-ammo-instantiation');
     }).then(function (_ref2) {
       var waitForAmmoInstantiation = _ref2["default"];
-      var isWasm = waitForAmmoInstantiation.isWasm,
-          wasmBinaryURL = waitForAmmoInstantiation.wasmBinaryURL;
-      if (!isWasm) {
-        return waitForAmmoInstantiation();
-      } else {
-        return Promise.resolve(fetchWasm(wasmBinaryURL)).then(function (wasmBinary) {
-          return waitForAmmoInstantiation(wasmBinary);
-        });
-      }
-    }); 
+      return waitForAmmoInstantiation(fetchWasm(''));
+    });
     return promise.then(function () {
       return _defineProperty({
         start: start
@@ -31,7 +23,7 @@ System.register([], function (_export, _context) {
     function start(_ref4) {
       var findCanvas = _ref4.findCanvas;
       var settings;
-      var cc;   
+      var cc;
       return Promise.resolve().then(function () {
         return topLevelImport('cc');
       }).then(function (engine) {
@@ -48,13 +40,12 @@ System.register([], function (_export, _context) {
         }).then(function () {
           return loadJsList(settings.jsList);
         }).then(function () {
-          return FBInstant.initializeAsync();
-        }).then(function () {
           return loadAssetBundle(settings.hasResourcesBundle, settings.hasStartSceneBundle);
         }).then(function () {
           if (settings.renderPipeline) return cc.game.run();
         }).then(function () {
-          return onGameStarted(cc, settings);
+          cc.game.onStart = onGameStarted.bind(null, cc, settings);
+          onGameStarted(cc, settings);
         });
       });
     }
@@ -74,6 +65,7 @@ System.register([], function (_export, _context) {
       if (hasStartSceneBundle) {
         bundleRoot.push(START_SCENE);
       }
+
       return bundleRoot.reduce(function (pre, name) {
         return pre.then(function () {
           return loadBundle(name);
@@ -81,8 +73,6 @@ System.register([], function (_export, _context) {
       }, Promise.resolve());
     }
 
-
-    
     function loadBundle(name) {
       return new Promise(function (resolve, reject) {
         cc.assetManager.loadBundle(name, function (err, bundle) {
@@ -112,7 +102,6 @@ System.register([], function (_export, _context) {
     }
 
     function loadSettingsJson(cc) {
-      var server = '';
       var settings = 'src/settings.json';
       return new Promise(function (resolve, reject) {
         if (typeof fsUtils !== 'undefined' && !settings.startsWith('http')) {
@@ -122,7 +111,6 @@ System.register([], function (_export, _context) {
             reject(result);
           } else {
             window._CCSettings = result;
-            window._CCSettings.server = server;
             resolve();
           }
         } else {
@@ -133,7 +121,6 @@ System.register([], function (_export, _context) {
 
             xhr.onload = function () {
               window._CCSettings = JSON.parse(xhr.response);
-              window._CCSettings.server = server;
               resolve();
             };
 
@@ -164,53 +151,30 @@ System.register([], function (_export, _context) {
     }
 
     var gameOptions = getGameOptions(cc, settings, findCanvas);
-    return Promise.resolve(cc.game.init(gameOptions));
+    var success = cc.game.init(gameOptions);
+
+    try {
+      if (settings.customLayers) {
+        settings.customLayers.forEach(function (layer) {
+          cc.Layers.addLayer(layer.name, layer.bit);
+        });
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+
+    return success ? Promise.resolve(success) : Promise.reject();
   }
 
   function onGameStarted(cc, settings) {
     window._CCSettings = undefined;
-    cc.view.enableRetina(true);
     cc.view.resizeWithBrowserSize(true);
+    var launchScene = settings.launchScene; // load scene
 
-    if (cc.sys.isMobile) {
-      if (settings.orientation === 'landscape') {
-        cc.view.setOrientation(cc.macro.ORIENTATION_LANDSCAPE);
-      } else if (settings.orientation === 'portrait') {
-        cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
-      }
-
-      cc.view.enableAutoFullScreen(false);
-    }
-
-    // var launchScene = settings.launchScene; // load scene
-
-    // cc.director.loadScene(launchScene, null, function () {
-    //   cc.view.setDesignResolutionSize(960, 640, 4);
-    //   console.log("Success to load scene: ".concat(launchScene));
-    // });
-
-
-    var launchScene = settings.launchScene;
-
-    var bundle = cc.assetManager.bundles.find(function (b) {
-        return b.getSceneInfo(launchScene);
+    cc.director.loadScene(launchScene, null, function () {
+      cc.view.setDesignResolutionSize(960, 640, 4);
+      console.log("Success to load scene: ".concat(launchScene));
     });
-
-    bundle.loadScene(launchScene, 
-        cc.sys.isBrowser ? function (completedCount, totalCount) {
-            var progress = 100 * completedCount / totalCount;
-            FBInstant.setLoadingProgress(progress);
-        } : null,
-        function (err, scene) {
-            FBInstant.startGameAsync()
-            .then(function () {
-                console.log('Success to load scene: ' + launchScene);
-                cc.director.runSceneImmediate(scene);
-            }).catch(function (e) { cc.error(e); });
-        }
-    );
-
-
   }
 
   function getGameOptions(cc, settings, findCanvas) {
@@ -231,7 +195,9 @@ System.register([], function (_export, _context) {
       adapter: findCanvas('GameCanvas'),
       assetOptions: assetOptions,
       customJointTextureLayouts: settings.customJointTextureLayouts || [],
-      physics: settings.physics
+      physics: settings.physics,
+      orientation: settings.orientation,
+      exactFitScreen: settings.exactFitScreen
     };
     return options;
   }

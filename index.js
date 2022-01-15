@@ -1,7 +1,7 @@
 System.register(["./application.js"], function (_export, _context) {
   "use strict";
 
-  var createApplication, canvas, $p, bcr;
+  var createApplication;
 
   function loadJsListFile(url) {
     return new Promise(function (resolve, reject) {
@@ -39,36 +39,18 @@ System.register(["./application.js"], function (_export, _context) {
   }
 
   function fetchWasm(url) {
-    return fetch(url).then(function (response) {
-      return response.arrayBuffer();
-    });
+    return url;
   }
 
   function findCanvas() {
-    // Use canvas in outer context
-    if (!canvas || canvas.tagName !== 'CANVAS') {
-      console.error("unknown canvas id:", el);
-    }
-
-    var width = canvas.width;
-    var height = canvas.height;
-    var container = document.createElement('div');
-
-    if (canvas && canvas.parentNode) {
-      canvas.parentNode.insertBefore(container, canvas);
-    }
-
-    container.setAttribute('id', 'Cocos3dGameContainer');
-    container.appendChild(canvas);
-    var frame = container.parentNode === document.body ? document.documentElement : container.parentNode;
-    addClass(canvas, 'gameCanvas');
-    canvas.setAttribute('width', width || '480');
-    canvas.setAttribute('height', height || '320');
+    var frame = document.querySelector('#GameDiv');
+    var container = document.querySelector('#Cocos3dGameContainer');
+    var canvas = document.querySelector('#GameCanvas');
     canvas.setAttribute('tabindex', '99');
     return {
       frame: frame,
-      canvas: canvas,
-      container: container
+      container: container,
+      canvas: canvas
     };
   }
 
@@ -89,11 +71,6 @@ System.register(["./application.js"], function (_export, _context) {
       createApplication = _applicationJs.createApplication;
     }],
     execute: function () {
-      canvas = document.getElementById('GameCanvas');
-      $p = canvas.parentElement;
-      bcr = $p.getBoundingClientRect();
-      canvas.width = bcr.width;
-      canvas.height = bcr.height;
       createApplication({
         loadJsListFile: loadJsListFile,
         fetchWasm: fetchWasm
